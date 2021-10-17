@@ -1,19 +1,19 @@
 import Cell from "./Cell";
 
-function Board({ userBoard }) {
+function Board({ board, onCellClick }) {
 
-    var board = [];
-    for (var i = 0; i < userBoard.length; i++) {
+    var toRender = [];
+    for (var i = 0; i < board.length; i++) {
         var row = [];
-        for (var j = 0; j < userBoard[i].length; j++) {
-            row.push(<Cell value={userBoard[i][j]} x={j} y={i}/>)
+        for (var j = 0; j < board[i].length; j++) {
+            row.push(<Cell value={board[i][j]} x={j} y={i} onCellClick={onCellClick}/>)
         }
-        board.push(<div style={{display: 'flex', flexDirection: 'row'}}>{row}</div>);
+        toRender.push(<div style={{display: 'flex', flexDirection: 'row'}}>{row}</div>);
     }
 
     return (
       <>
-        <div>{board}</div>
+        <div>{toRender}</div>
       </>
     );
   }

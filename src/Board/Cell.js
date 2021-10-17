@@ -1,4 +1,4 @@
-function Cell({ value, x, y }) {
+function Cell({ value, x, y, onCellClick }) {
 
     var color = 'gray'
 
@@ -10,13 +10,16 @@ function Cell({ value, x, y }) {
             color = 'black'
             break;
         case 'H':
-            color = 'red'
+            color = 'crimson'
+            break;
+        case 'S':
+            color = 'green'
             break;
     }
 
     return (
       <>
-        <div style={{height: 4+"vw", width: 4+"vw", background: color, border: '1px solid gray'}}></div>
+        <div onClick={() => onCellClick(x,y)} style={{height: 3.5+"vw", width: 3.5+"vw", background: color, margin: 1}}></div>
       </>
     );
   }
