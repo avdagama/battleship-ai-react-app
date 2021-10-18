@@ -22,9 +22,10 @@ function App() {
   const [computerBoard, setComputerBoard] = useState(startingComputerBoard);
   const [probabilityBoard, setProbabilityBoard] = useState(startingProbabilityBoard);
   const [isUserPlacingShips, setIsUserPlacingShips] = useState(true);
-  
-  const isGameStarted = true;
-  const isUsersTurn = true;
+
+  function onDonePlacingShipsClick() {
+    setIsUserPlacingShips(() => false);
+  }
 
   function onUserCellClick(x, y) {
     if (isUserPlacingShips) {
@@ -38,7 +39,11 @@ function App() {
   }
 
   function onComputerCellClick(x, y) {
-    console.log("Computer: " + x + " " + y);
+    makeUserMove(x, y);
+    makeComputerMove();
+  }
+
+  function makeUserMove(x, y) {
     setComputerBoard(prevBoard => {
       let newBoard = prevBoard.map(inner => inner.slice())
       newBoard[y][x] = 'M';
@@ -46,22 +51,47 @@ function App() {
     })
   }
 
-  function onDonePlacingShipsClick() {
-    setIsUserPlacingShips(() => {return false});
+  function makeComputerMove() {
+    let x = getRandomNumber(0, 10);
+    let y = getRandomNumber(0, 10);
+
+    setUserBoard(prevBoard => {
+      let newBoard = prevBoard.map(inner => inner.slice())
+      newBoard[y][x] = 'M';
+      return newBoard;
+    })
+  }
+
+  //generates a random integer between the min (inclusive) and the max (exclusive).
+  function getRandomNumber(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min) + min);
   }
 
   return (
     <>
-      <h1 style={{fontSize: 54, fontFamily: 'Copperplate', color: 'white', textAlign: 'center', marginTop: 20, marginBottom: 0}}>Battleship</h1>
+      <h1 style={{marginTop: 20, marginBottom: 0}}>Battleship</h1>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
         <div>
           <h2 style={{textAlign: 'center', fontFamily: 'Copperplate', color: 'white'}}>You</h2>
           <Board board={userBoard} onCellClick={onUserCellClick}/>
         </div>
         {isUserPlacingShips ? 
-        <div style={{textAlign: 'center'}}>
-          <h2 style={{fontFamily: 'Copperplate', color: 'white', marginTop: 180}}>Place your ships</h2>
-          <button onClick={onDonePlacingShipsClick} style={{fontSize: 24, fontFamily: 'Copperplate', backgroundColor: 'white', color: 'dodgerblue', border: 'none', borderRadius: 6, padding: 10}}>I'm done placing my ships</button>
+        <div style={{textAlign: 'center', width: 35+'vw', margin: 'auto 0'}}>
+          <h2>Welcome to Battleship</h2>
+          <p>
+            Your goal is to sink all of the AI's ships before they can sink yours.
+          </p>
+          <p>
+            To start, place the following ships horizontally or verically:
+          </p>
+          <p>Carrier (5 spaces)</p>
+          <p>Battleship (4 spaces)</p>
+          <p>Cruiser (3 spaces)</p>
+          <p>Submarine (3 spaces)</p>
+          <p>Destroyer (2 spaces)</p>
+          <button onClick={onDonePlacingShipsClick} className={'button'}>I'm done placing my ships</button>
         </div>
         :
         <div>
