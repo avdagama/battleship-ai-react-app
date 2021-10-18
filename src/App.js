@@ -31,7 +31,7 @@ function App() {
     if (isUserPlacingShips) {
       setUserBoard(prevBoard => {
         let newBoard = prevBoard.map(inner => inner.slice())
-        newBoard[y][x] = newBoard[y][x] === 'S' ? 'W' : 'S';
+        newBoard[y][x] = (newBoard[y][x] === 'S' ? 'W' : 'S');
         return newBoard;
       })
     }
@@ -49,33 +49,46 @@ function App() {
     if (nextState == null)
       return false;
 
-    computerBoard[y][x] = nextState;
-    setComputerBoard(() => computerBoard)
+    setComputerBoard(board => {
+      board[y][x] = nextState;
+      return [...board];
+    })
     return true;
   }
   
   function makeComputerMove() {
-    setUserBoard(prevBoard => {
-      let newBoard = prevBoard.map(inner => inner.slice())
-      var nextState, x, y;
-      while (nextState == null) {
-        //TO DO: Currently the computer just picks random coordinates. 
-        // We need to implement choosing the best probability here
-        x = getRandomNumber(0, 10);
-        y = getRandomNumber(0, 10);
-        nextState = getNextCellState(prevBoard[y][x]);
+    let bestMove = getBestMove();
+    let nextState = getNextCellState(userBoard[bestMove[0]][bestMove[1]]);
+
+    setUserBoard(board => {
+      board[bestMove[0]][bestMove[1]] = nextState;
+      return [...board];
+    });
+  }
+
+  function getBestMove() {
+      //get the move with the highest probability
+      let bestMove;
+      let maxProbability = 0;
+      for(let y = 0; y < probabilityBoard.length; y++) {
+        for (let x = 0; x < probabilityBoard[y].length; x++) {
+          if (probabilityBoard[y][x] > maxProbability) {
+            maxProbability = probabilityBoard[y][x];
+            bestMove = [y, x];
+          }
+        }
       }
-      newBoard[y][x] = nextState;
-      return newBoard;
-    })
+      //since we don't want to make this move again, set the probability to 0
+      probabilityBoard[bestMove[0]][bestMove[1]] = 0.0;
+      return bestMove;
   }
 
   function getNextCellState(prevState) {
     switch (prevState) {
-      //water
+      //water -> miss
       case 'W':
         return 'M'
-      //ship
+      //ship -> hit
       case 'S':
         return 'H';
       default:
@@ -101,12 +114,8 @@ function App() {
         {isUserPlacingShips ? 
         <div style={{textAlign: 'center', width: 35+'vw', margin: 'auto 0'}}>
           <h2>Welcome to Battleship</h2>
-          <p>
-            Your goal is to sink all of the AI's ships before it can sink yours.
-          </p>
-          <p>
-            To start, place the following ships horizontally or verically:
-          </p>
+          <p>Your goal is to sink all of the AI's ships before it can sink yours.</p>
+          <p>To start, place the following ships horizontally or verically by clicking cells on the grid:</p>
           <p>Carrier (5 spaces)</p>
           <p>Battleship (4 spaces)</p>
           <p>Cruiser (3 spaces)</p>
