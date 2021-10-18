@@ -29,37 +29,54 @@ function App() {
 
   function onUserCellClick(x, y) {
     if (isUserPlacingShips) {
-      console.log("User: " + x + " " + y);
       setUserBoard(prevBoard => {
         let newBoard = prevBoard.map(inner => inner.slice())
-        newBoard[y][x] = 'S';
+        newBoard[y][x] = newBoard[y][x] === 'S' ? 'W' : 'S';
         return newBoard;
       })
     }
   }
 
   function onComputerCellClick(x, y) {
-    makeUserMove(x, y);
-    makeComputerMove();
+    if (makeUserMove(x, y))
+      makeComputerMove();
   }
 
+  //returns if the move was made
   function makeUserMove(x, y) {
-    setComputerBoard(prevBoard => {
-      let newBoard = prevBoard.map(inner => inner.slice())
-      newBoard[y][x] = 'M';
-      return newBoard;
-    })
+    let nextState = getNextCellState(computerBoard[y][x]);
+    if (nextState == null)
+      return false;
+
+    computerBoard[y][x] = nextState;
+    setComputerBoard(() => computerBoard)
+    return true;
   }
-
+  
   function makeComputerMove() {
-    let x = getRandomNumber(0, 10);
-    let y = getRandomNumber(0, 10);
-
     setUserBoard(prevBoard => {
       let newBoard = prevBoard.map(inner => inner.slice())
-      newBoard[y][x] = 'M';
+      var nextState, x, y;
+      while (nextState == null) {
+        x = getRandomNumber(0, 10);
+        y = getRandomNumber(0, 10);
+        nextState = getNextCellState(prevBoard[y][x]);
+      }
+      newBoard[y][x] = nextState;
       return newBoard;
     })
+  }
+
+  function getNextCellState(prevState) {
+    switch (prevState) {
+      //water
+      case 'W':
+        return 'M'
+      //ship
+      case 'S':
+        return 'H';
+    }
+    return null;
   }
 
   //generates a random integer between the min (inclusive) and the max (exclusive).
