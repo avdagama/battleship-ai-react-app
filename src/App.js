@@ -27,23 +27,42 @@ function App() {
     setIsUserPlacingShips(() => false);
   }
 
+  /**
+   * Handles when a user clicks on their own cell
+   * @param {int} x - the x coordinate 
+   * @param {int} y - the y coordinate
+   */
   function onUserCellClick(x, y) {
+    //only react if the user is still placing their ships
     if (isUserPlacingShips) {
       setUserBoard(prevBoard => {
         let newBoard = prevBoard.map(inner => inner.slice())
+        //clicking a cell switches it between water and a ship
         newBoard[y][x] = (newBoard[y][x] === 'S' ? 'W' : 'S');
         return newBoard;
       })
     }
   }
 
+  /**
+   * Handles when a user clicks on a computer's cell
+   * @param {int} x - the x coordinate 
+   * @param {int} y - the y coordinate
+   */
   function onComputerCellClick(x, y) {
     //if the user made a valid move, then the computer can make the next move
-    if (makeUserMove(x, y))
-      makeComputerMove();
+    if (makeUserMove(x, y)) {
+      let bestMove = getBestMove();
+      makeComputerMove(bestMove.x, bestMove.y);
+    }
   }
 
-  //returns if the move was made
+  /**
+   * Attempts to make a move for the user at computerBoard[y][x]
+   * @param {int} x - the x coordinate 
+   * @param {int} y - the y coordinate
+   * @returns {boolean} if a move was successfully made
+   */
   function makeUserMove(x, y) {
     let nextState = getNextCellState(computerBoard[y][x]);
     if (nextState == null)
@@ -56,33 +75,48 @@ function App() {
     return true;
   }
   
-  function makeComputerMove() {
-    let bestMove = getBestMove();
-    let nextState = getNextCellState(userBoard[bestMove[0]][bestMove[1]]);
+  /**
+   * Makes a move for the computer at userBoard[y][x]
+   * @param {int} x - the x coordinate 
+   * @param {int} y - the y coordinate
+   */
+  function makeComputerMove(x, y) {
+    let nextState = getNextCellState(userBoard[y][x]);
 
     setUserBoard(board => {
-      board[bestMove[0]][bestMove[1]] = nextState;
+      board[y][x] = nextState;
       return [...board];
     });
   }
 
+  /**
+   * Calculates the best move and updates the probability board
+   * @returns {x, y} the best move
+   */
   function getBestMove() {
-      //get the move with the highest probability
       let bestMove;
       let maxProbability = 0;
       for(let y = 0; y < probabilityBoard.length; y++) {
         for (let x = 0; x < probabilityBoard[y].length; x++) {
           if (probabilityBoard[y][x] > maxProbability) {
             maxProbability = probabilityBoard[y][x];
-            bestMove = [y, x];
+            bestMove = {
+              x: x,
+              y: y
+            }
           }
         }
       }
       //since we don't want to make this move again, set the probability to 0
-      probabilityBoard[bestMove[0]][bestMove[1]] = 0.0;
+      probabilityBoard[bestMove.y][bestMove.x] = 0.0;
       return bestMove;
   }
 
+  /**
+   * Determines the new state for a cell based on its existing state
+   * @param {string} prevState - the existing state of the cell
+   * @returns The next state, or null if no next state exists
+   */
   function getNextCellState(prevState) {
     switch (prevState) {
       //water -> miss
@@ -96,12 +130,6 @@ function App() {
     }
   }
 
-  //generates a random integer between the min (inclusive) and the max (exclusive).
-  function getRandomNumber(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min) + min);
-  }
 
   return (
     <>
