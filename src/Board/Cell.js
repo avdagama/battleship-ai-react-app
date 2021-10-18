@@ -2,7 +2,7 @@ import './Cell.css'
 
 function Cell({ value, x, y, onCellClick }) {
 
-    var color = 'white'
+    var color;
 
     switch (value) {
         //water
@@ -25,6 +25,8 @@ function Cell({ value, x, y, onCellClick }) {
         case 'S':
             color = 'green'
             break;
+        default:
+            color = 'white'
     }
 
     return (

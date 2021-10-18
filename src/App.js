@@ -38,6 +38,7 @@ function App() {
   }
 
   function onComputerCellClick(x, y) {
+    //if the user made a valid move, then the computer can make the next move
     if (makeUserMove(x, y))
       makeComputerMove();
   }
@@ -58,6 +59,8 @@ function App() {
       let newBoard = prevBoard.map(inner => inner.slice())
       var nextState, x, y;
       while (nextState == null) {
+        //TO DO: Currently the computer just picks random coordinates. 
+        // We need to implement choosing the best probability here
         x = getRandomNumber(0, 10);
         y = getRandomNumber(0, 10);
         nextState = getNextCellState(prevBoard[y][x]);
@@ -75,8 +78,9 @@ function App() {
       //ship
       case 'S':
         return 'H';
+      default:
+        return null;
     }
-    return null;
   }
 
   //generates a random integer between the min (inclusive) and the max (exclusive).
@@ -98,7 +102,7 @@ function App() {
         <div style={{textAlign: 'center', width: 35+'vw', margin: 'auto 0'}}>
           <h2>Welcome to Battleship</h2>
           <p>
-            Your goal is to sink all of the AI's ships before they can sink yours.
+            Your goal is to sink all of the AI's ships before it can sink yours.
           </p>
           <p>
             To start, place the following ships horizontally or verically:
