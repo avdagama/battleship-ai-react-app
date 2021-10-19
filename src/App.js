@@ -51,17 +51,15 @@ function App() {
    */
   function onComputerCellClick(x, y) {
     //if the user made a valid move, then the computer can make the next move
-    if (makeUserMove(x, y)) {
-      let bestMove = getBestMove();
-      makeComputerMove(bestMove.x, bestMove.y);
-    }
+    if (makeUserMove(x, y))
+      makeComputerMove();
   }
 
   /**
    * Attempts to make a move for the user at computerBoard[y][x]
    * @param {int} x - the x coordinate 
    * @param {int} y - the y coordinate
-   * @returns {boolean} if a move was successfully made
+   * @returns {boolean} if the user made a valid move
    */
   function makeUserMove(x, y) {
     let nextState = getNextCellState(computerBoard[y][x]);
@@ -76,12 +74,12 @@ function App() {
   }
   
   /**
-   * Makes a move for the computer at userBoard[y][x]
-   * @param {int} x - the x coordinate 
-   * @param {int} y - the y coordinate
+   * Makes the statistically best move for the computer
    */
-  function makeComputerMove(x, y) {
+  function makeComputerMove() {
+    let {x, y} = getBestMove();
     let nextState = getNextCellState(userBoard[y][x]);
+    updateProbabilities(x, y, nextState);
 
     setUserBoard(board => {
       board[y][x] = nextState;
@@ -107,9 +105,33 @@ function App() {
           }
         }
       }
-      //since we don't want to make this move again, set the probability to 0
-      probabilityBoard[bestMove.y][bestMove.x] = 0.0;
       return bestMove;
+  }
+
+  /**
+   * Updates the probability board given the result of the computer's move
+   * @param {int} x - the x coordinate of the computer's last move
+   * @param {int} y - the y coordinate of the computer's last move
+   * @param {string} resultingCellState The resulting state of the cell at userBoard[y][x]
+   */
+  function updateProbabilities(x, y, resultingCellState) {
+    //since we don't want to make this move again, set the probability to 0
+    probabilityBoard[y][x] = 0.0;
+
+    switch (resultingCellState) {
+      //miss
+      case 'M':
+         // TODO: update the probability board after a miss
+        break;
+
+      //hit
+      case 'H':
+        // TODO: update the probability board after a hit
+        break;
+        
+      default:
+        break;
+    }
   }
 
   /**
