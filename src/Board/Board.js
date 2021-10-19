@@ -1,12 +1,12 @@
 import Cell from "./Cell";
 
-function Board({ board, onCellClick }) {
+function Board({ board, hideShips, onCellClick }) {
 
     var rows = [];
     for (var i = 0; i < board.length; i++) {
         var row = [];
         for (var j = 0; j < board[i].length; j++) {
-            row.push(<Cell key={i + ' ' + j} value={board[i][j]} x={j} y={i} onCellClick={onCellClick}/>)
+            row.push(<Cell key={i + ' ' + j} value={board[i][j]} x={j} y={i} hideShips={hideShips} onCellClick={onCellClick}/>)
         }
         rows.push(<div key={i} style={{display: 'flex', flexDirection: 'row'}}>{row}</div>);
     }

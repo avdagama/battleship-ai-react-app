@@ -24,7 +24,36 @@ function App() {
   const [isUserPlacingShips, setIsUserPlacingShips] = useState(true);
 
   function onDonePlacingShipsClick() {
+    placeComputerShips();
     setIsUserPlacingShips(() => false);
+  }
+
+  /**
+   * Randomly places the computer's ships on the computerBoard
+   */
+  function placeComputerShips() {
+    //TODO: currently we hardcode the ships, we should be randomly place them
+    computerBoard[8][1] = 'S';
+    computerBoard[8][2] = 'S';
+    computerBoard[8][3] = 'S';
+    computerBoard[8][4] = 'S';
+    computerBoard[8][5] = 'S';
+
+    computerBoard[0][1] = 'S';
+    computerBoard[1][1] = 'S';
+    computerBoard[2][1] = 'S';
+    computerBoard[3][1] = 'S';
+
+    computerBoard[4][4] = 'S';
+    computerBoard[4][5] = 'S';
+    computerBoard[4][6] = 'S';
+
+    computerBoard[7][9] = 'S';
+    computerBoard[8][9] = 'S';
+    computerBoard[9][9] = 'S';
+
+    computerBoard[2][7] = 'S';
+    computerBoard[1][7] = 'S';
   }
 
   /**
@@ -88,7 +117,7 @@ function App() {
   }
 
   /**
-   * Calculates the best move and updates the probability board
+   * Gets the move with the highest probability on the probabilityBoard
    * @returns {x, y} the best move
    */
   function getBestMove() {
@@ -98,10 +127,7 @@ function App() {
         for (let x = 0; x < probabilityBoard[y].length; x++) {
           if (probabilityBoard[y][x] > maxProbability) {
             maxProbability = probabilityBoard[y][x];
-            bestMove = {
-              x: x,
-              y: y
-            }
+            bestMove = {x, y};
           }
         }
       }
@@ -128,7 +154,7 @@ function App() {
       case 'H':
         // TODO: update the probability board after a hit
         break;
-        
+
       default:
         break;
     }
@@ -158,11 +184,11 @@ function App() {
       <h1 style={{marginTop: 20, marginBottom: 0}}>Battleship</h1>
       <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
         <div>
-          <h2 style={{textAlign: 'center', fontFamily: 'Copperplate', color: 'white'}}>You</h2>
-          <Board board={userBoard} onCellClick={onUserCellClick}/>
+          <h2>You</h2>
+          <Board board={userBoard} hideShips={false} onCellClick={onUserCellClick}/>
         </div>
         {isUserPlacingShips ? 
-        <div style={{textAlign: 'center', width: 35+'vw', margin: 'auto 0'}}>
+        <div style={{textAlign: 'center', width: 30+'vw', margin: 'auto 0'}}>
           <h2>Welcome to Battleship</h2>
           <p>Your goal is to sink all of the AI's ships before it can sink yours.</p>
           <p>To start, place the following ships horizontally or verically by clicking cells on the grid:</p>
@@ -175,8 +201,8 @@ function App() {
         </div>
         :
         <div>
-          <h2 style={{textAlign: 'center', fontFamily: 'Copperplate', color: 'white'}}>AI</h2>
-          <Board board={computerBoard} onCellClick={onComputerCellClick}/>
+          <h2>AI</h2>
+          <Board board={computerBoard} hideShips={true} onCellClick={onComputerCellClick}/>
         </div>
         }
       </div>

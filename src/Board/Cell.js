@@ -1,6 +1,6 @@
 import './Cell.css'
 
-function Cell({ value, x, y, onCellClick }) {
+function Cell({ value, x, y, hideShips, onCellClick }) {
 
     var color;
 
@@ -23,7 +23,7 @@ function Cell({ value, x, y, onCellClick }) {
             break;
         //ship
         case 'S':
-            color = 'green'
+            color = (hideShips ? 'royalblue' : 'green');
             break;
         default:
             color = 'white'
