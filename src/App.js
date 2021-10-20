@@ -22,6 +22,7 @@ function App() {
   const [computerBoard, setComputerBoard] = useState(startingComputerBoard);
   const [probabilityBoard, setProbabilityBoard] = useState(startingProbabilityBoard);
   const [isUserPlacingShips, setIsUserPlacingShips] = useState(true);
+  const [didUserWin, setDidUserWin] = useState(null);
 
   function onDonePlacingShipsClick() {
     placeComputerShips();
@@ -79,9 +80,33 @@ function App() {
    * @param {int} y - the y coordinate
    */
   function onComputerCellClick(x, y) {
-    //if the user made a valid move, then the computer can make the next move
-    if (makeUserMove(x, y))
-      makeComputerMove();
+    //make sure no one won yet
+    if (didUserWin != null)
+      return
+
+    //only continue if the user made a valid move
+    if (makeUserMove(x, y) == false)
+      return
+
+    //check if the user won
+    if (isAllShipsSunken(computerBoard)) {
+      setDidUserWin(true);
+      return;
+    }
+
+    makeComputerMove();
+
+    //check if the computer won
+    if (isAllShipsSunken(userBoard))
+      setDidUserWin(false);
+  }
+
+  function onPlayAgainClick() {
+    setUserBoard(startingUserBoard);
+    setComputerBoard(startingComputerBoard);
+    setProbabilityBoard(startingProbabilityBoard);
+    setIsUserPlacingShips(true);
+    setDidUserWin(null);
   }
 
   /**
@@ -95,10 +120,8 @@ function App() {
     if (nextState == null)
       return false;
 
-    setComputerBoard(board => {
-      board[y][x] = nextState;
-      return [...board];
-    })
+    computerBoard[y][x] = nextState;
+    setComputerBoard(board => [...board]);
     return true;
   }
   
@@ -110,10 +133,8 @@ function App() {
     let nextState = getNextCellState(userBoard[y][x]);
     updateProbabilities(x, y, nextState);
 
-    setUserBoard(board => {
-      board[y][x] = nextState;
-      return [...board];
-    });
+    userBoard[y][x] = nextState;
+    setUserBoard(board => [...board]);
   }
 
   /**
@@ -178,11 +199,29 @@ function App() {
     }
   }
 
+  /**
+   * Checks to see if a board contains no ships
+   * @param {string[][]} board 
+   * @returns {boolean} If the board contains no ships
+   */
+  function isAllShipsSunken(board) {
+    for(let y = 0; y < board.length; y++)
+      for (let x = 0; x < board[y].length; x++)
+        if (board[y][x] === 'S')
+          return false;
+    return true;
+  }
 
   return (
     <>
-      <h1 style={{marginTop: 20, marginBottom: 0}}>Battleship</h1>
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly'}}>
+      <h1 style={{margin: 40}}>BATTLESHIP</h1>
+      {(didUserWin != null) && 
+        <div className={'grow'} style={{margin: 60, textAlign: 'center'}}>
+          <h2>{didUserWin ? 'You won!' : 'You lost!'}</h2>
+          <button onClick={onPlayAgainClick} className={'button'}>Play again</button>
+        </div>
+      }
+      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: 40}}>
         <div>
           <h2>You</h2>
           <Board board={userBoard} hideShips={false} onCellClick={onUserCellClick}/>
@@ -192,11 +231,13 @@ function App() {
           <h2>Welcome to Battleship</h2>
           <p>Your goal is to sink all of the AI's ships before it can sink yours.</p>
           <p>To start, place the following ships horizontally or verically by clicking cells on the grid:</p>
-          <p>Carrier (5 spaces)</p>
-          <p>Battleship (4 spaces)</p>
-          <p>Cruiser (3 spaces)</p>
-          <p>Submarine (3 spaces)</p>
-          <p>Destroyer (2 spaces)</p>
+          <p>
+            Carrier (5 spaces)<br/>
+            Battleship (4 spaces)<br/>
+            Cruiser (3 spaces)<br/>
+            Submarine (3 spaces)<br/>
+            Destroyer (2 spaces)
+          </p>
           <button onClick={onDonePlacingShipsClick} className={'button'}>I'm done placing my ships</button>
         </div>
         :
