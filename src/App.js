@@ -85,7 +85,7 @@ function App() {
       return
 
     //only continue if the user made a valid move
-    if (makeUserMove(x, y) == false)
+    if (makeUserMove(x, y) === false)
       return
 
     //check if the user won
@@ -214,7 +214,7 @@ function App() {
 
   return (
     <>
-      <h1 style={{margin: 40}}>BATTLESHIP</h1>
+      <h1 style={{margin: 40}}>BATTLESHIP AI</h1>
       {(didUserWin != null) && 
         <div className={'grow'} style={{margin: 60, textAlign: 'center'}}>
           <h2>{didUserWin ? 'You won!' : 'You lost!'}</h2>
@@ -228,7 +228,6 @@ function App() {
         </div>
         {isUserPlacingShips ? 
         <div style={{textAlign: 'center', width: 30+'vw', margin: 'auto 0'}}>
-          <h2>Welcome to Battleship</h2>
           <p>Your goal is to sink all of the AI's ships before it can sink yours.</p>
           <p>To start, place the following ships horizontally or verically by clicking cells on the grid:</p>
           <p>
@@ -246,6 +245,9 @@ function App() {
           <Board board={computerBoard} hideShips={true} onCellClick={onComputerCellClick}/>
         </div>
         }
+      </div>
+      <div style={{margin: 80, textAlign: 'center'}}>
+        <a style={{fontSize: 14, color: 'dimgray'}} href={'https://github.com/avdagama/battleship-ai-react-app'}>View project on GitHub</a>
       </div>
     </>
   );
