@@ -1,6 +1,8 @@
 import './App.css';
 import { useState } from 'react'
+import WinLose from './WinLose';
 import Board from './Board/Board';
+import Directions from './Directions';
 
 function App() {
   const startingUserBoard = Array.from(Array(10), _ => Array(10).fill('W'));
@@ -101,7 +103,10 @@ function App() {
       setDidUserWin(false);
   }
 
-  function onPlayAgainClick() {
+  /**
+   * Resets all the states to start a new game
+   */
+  function resetGame() {
     setUserBoard(startingUserBoard);
     setComputerBoard(startingComputerBoard);
     setProbabilityBoard(startingProbabilityBoard);
@@ -214,41 +219,27 @@ function App() {
 
   return (
     <>
-      <h1 style={{margin: 40}}>BATTLESHIP AI</h1>
-      {(didUserWin != null) && 
-        <div className={'grow'} style={{margin: 60, textAlign: 'center'}}>
-          <h2>{didUserWin ? 'You won!' : 'You lost!'}</h2>
-          <button onClick={onPlayAgainClick} className={'button'}>Play again</button>
-        </div>
-      }
-      <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly', margin: 40}}>
+      <header>
+        <h1>BATTLESHIP AI</h1>
+      </header>
+      {didUserWin != null && <WinLose didUserWin={didUserWin} onPlayAgainClick={resetGame}/>}
+      <div className={'game'}>
         <div>
           <h2>You</h2>
           <Board board={userBoard} hideShips={false} onCellClick={onUserCellClick}/>
         </div>
         {isUserPlacingShips ? 
-        <div style={{textAlign: 'center', width: 30+'vw', margin: 'auto 0'}}>
-          <p>Your goal is to sink all of the AI's ships before it can sink yours.</p>
-          <p>To start, place the following ships horizontally or verically by clicking cells on the grid:</p>
-          <p>
-            Carrier (5 spaces)<br/>
-            Battleship (4 spaces)<br/>
-            Cruiser (3 spaces)<br/>
-            Submarine (3 spaces)<br/>
-            Destroyer (2 spaces)
-          </p>
-          <button onClick={onDonePlacingShipsClick} className={'button'}>I'm done placing my ships</button>
-        </div>
+          <Directions onDonePlacingShipsClick={onDonePlacingShipsClick} />
         :
-        <div>
-          <h2>AI</h2>
-          <Board board={computerBoard} hideShips={true} onCellClick={onComputerCellClick}/>
-        </div>
+          <div>
+            <h2>AI</h2>
+            <Board board={computerBoard} hideShips={true} onCellClick={onComputerCellClick}/>
+          </div>
         }
       </div>
-      <div style={{margin: 80, textAlign: 'center'}}>
-        <a style={{fontSize: 14, color: 'dimgray'}} href={'https://github.com/avdagama/battleship-ai-react-app'}>View project on GitHub</a>
-      </div>
+      <footer>
+        <a href={'https://github.com/avdagama/battleship-ai-react-app'}>View project on GitHub</a>
+      </footer>
     </>
   );
 }
