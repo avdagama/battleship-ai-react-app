@@ -32,32 +32,132 @@ function App() {
   }
 
   /**
+ * 
+ * @param {int} min - the min value used 
+ * @param {int} max - the max value to be found -1
+ * @returns {int} - value that randomly chosen between min and max -1
+ */
+  function getRandom(min, max) {
+    return Math.floor(Math.random() * (max - min) + min);
+  }
+  
+  /**
+   * Places ship in random location
+   * @param {int} ship - size of ship 
+   */
+  function placeShip (ship) {
+    let x, y, direction
+
+    //checks to see if ship is already placed around random generated location dependent on ship size
+    //facing -> 0 (vertical) | 1 (horizontal)
+    while (true){
+      x = getRandom(0,10);
+      let tempX = x;
+      y = getRandom(0,10);
+      let tempY = y;
+      direction = getRandom(0,2);
+
+      if (direction === 0) {
+        if (y < 5) {
+          //check if we can place the ship
+          let canPlaceShip = true;
+          for (let i = 0; i < ship + 1; i++) {
+            if (computerBoard[tempX][tempY++] !== 'W') {
+              canPlaceShip = false;
+              break;
+            }
+          }
+          //place the ship
+          if (canPlaceShip) {
+            for (let i = 0; i < ship; i++) {
+              //change said location to a 'ship' block
+              computerBoard[x][y++] = 'S';
+            }
+            break;
+          }
+        }
+        else{
+          //check if we can place the ship
+          let canPlaceShip = true;
+          for (let i = 0; i < ship + 1; i++) {
+            if (computerBoard[tempX][tempY--] !== 'W') {
+              canPlaceShip = false;
+              break;
+            }
+          }
+          //place the ship
+          if (canPlaceShip) {
+            for (let i = 0; i < ship; i++) {
+              //change said location to a 'ship' block
+              computerBoard[x][y--] = 'S';
+            }
+            break;
+          }
+        }
+      }
+      else if (direction === 1){
+        if (x < 5) {
+          //check if we can place the ship
+          let canPlaceShip = true;
+          for (let i = 0; i < ship + 1; i++) {
+            if (computerBoard[tempX++][tempY] !== 'W') {
+              canPlaceShip = false;
+              break;
+            }
+          }
+          //place the ship
+          if (canPlaceShip) {
+            for (let i = 0; i < ship; i++) {
+              //change said location to a 'ship' block
+              computerBoard[x++][y] = 'S';
+            }
+            break;
+          }
+        } 
+        else {
+          //check if we can place the ship
+          let canPlaceShip = true;          
+          for (let i = 0; i < ship + 1; i++) {
+            if (tempX < 0)
+              continue;
+            if (computerBoard[tempX--][tempY] !== 'W') {
+              canPlaceShip = false;
+              break;
+            }
+          }
+          //place the ship
+          if (canPlaceShip) {
+            for (let i = 0; i < ship; i++) {
+              //change said location to a 'ship' block
+              computerBoard[x--][y] = 'S';
+            }
+            break;
+          }
+        }
+      }
+    }
+  }
+  
+  /**
    * Randomly places the computer's ships on the computerBoard
    */
   function placeComputerShips() {
-    //TODO: currently we hardcode the ships, we should be randomly place them
-    computerBoard[8][1] = 'S';
-    computerBoard[8][2] = 'S';
-    computerBoard[8][3] = 'S';
-    computerBoard[8][4] = 'S';
-    computerBoard[8][5] = 'S';
+    //carrier ship
+    placeShip(5);
 
-    computerBoard[0][1] = 'S';
-    computerBoard[1][1] = 'S';
-    computerBoard[2][1] = 'S';
-    computerBoard[3][1] = 'S';
+    //battleship
+    placeShip(4);
 
-    computerBoard[4][4] = 'S';
-    computerBoard[4][5] = 'S';
-    computerBoard[4][6] = 'S';
+    //cruiser
+    placeShip(3);
 
-    computerBoard[7][9] = 'S';
-    computerBoard[8][9] = 'S';
-    computerBoard[9][9] = 'S';
+    //submarine
+    placeShip(3);
 
-    computerBoard[2][7] = 'S';
-    computerBoard[1][7] = 'S';
+    //destroyer
+    placeShip(2);
   }
+
 
   /**
    * Handles when a user clicks on their own cell
