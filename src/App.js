@@ -281,7 +281,7 @@ function App() {
         // TODO: update the probability board after a hit
 
         //update horizontal and vertical as long as is on bounds 
-
+        updateHV(y,x); 
 
         break;
 
@@ -301,7 +301,20 @@ function App() {
   }
 
   function discarted(y,x){
-    return (probabilityBoard[y][x] == 0) ? true : false;
+    //return (probabilityBoard[y][x] == 0) ? true : false;
+
+    if( probabilityBoard[y][x] == 0 ){
+      return true; 
+    }
+    else if( probabilityBoard[y-1][x] == 0 &&
+           probabilityBoard[y+1][x] == 0 &&
+           probabilityBoard[y][x+1] == 0 &&
+           probabilityBoard[y][x-1] == 0  ) 
+    {
+      return true; 
+    }
+    
+    return false; 
   }
   
   function updateHV(y,x){
