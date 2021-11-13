@@ -302,8 +302,8 @@ function App() {
   const maxArrayIndex = 10; 
   const minArrayIndex = 0; 
   function inRange(y , x){
-      if( minArrayIndex <= x <= maxArrayIndex){
-        if( minArrayIndex <= y <= maxArrayIndex){
+      if( minArrayIndex <= x && x < maxArrayIndex){
+        if( minArrayIndex <= y && y < maxArrayIndex){
             return true; 
         }
       }
