@@ -319,26 +319,27 @@ function App() {
   
   function updateHV(y,x){
     //Vertical 
+    const percentage = .90; 
     let temp = y+1; 
     if(inRange(temp,x) && !discarted(temp,x))
     {
-      probabilityBoard[temp][x] += probabilityBoard[temp][x] * .83;
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;
     }
     temp = y-1; 
     if(inRange(temp,x) )
     {
-      probabilityBoard[temp][x] += probabilityBoard[temp][x] * .83;  
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;  
     }
     //horizontal 
     temp = x+1;
     if(inRange(y,temp) && !discarted(y,temp))
     {
-      probabilityBoard[y][temp] += probabilityBoard[y][temp] * .83; 
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * percentage; 
     }
     temp = x-1;
     if(inRange(y,temp) && !discarted(y,temp))
     {
-      probabilityBoard[y][temp] += probabilityBoard[y][temp] * .83;
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * percentage;
     }
   }
 
