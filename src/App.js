@@ -310,15 +310,17 @@ function App() {
   }
 
   function discarted(y,x){
-    //return (probabilityBoard[y][x] == 0) ? true : false;
-
-    if( probabilityBoard[y][x] === 0 ){
+    //return (probabilityBoard[y][x] == 0) ? true : false
+    if( probabilityBoard[y][x] == 0 )
+    {
       return true; 
     }
-    else if( probabilityBoard[y-1][x] === 0 &&
-           probabilityBoard[y+1][x] === 0 &&
-           probabilityBoard[y][x+1] === 0 &&
-           probabilityBoard[y][x-1] === 0  ) 
+
+
+    if(   (inRange(y-1,x) && probabilityBoard[y-1][x] === 0) &&
+          (inRange(y+1,x) && probabilityBoard[y+1][x] === 0) &&
+          (inRange(y,x+1) && probabilityBoard[y][x+1] === 0) &&
+          (inRange(y,x-1) &&probabilityBoard[y][x-1] === 0)      ) 
     {
       return true; 
     }
