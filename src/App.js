@@ -317,55 +317,55 @@ function App() {
     return false; 
   }
   
-  // function updateHV(y,x){
-  //   //Vertical 
-  //   let temp = y+1; 
-  //   if(inRange(temp,x) && !discarted(temp,x))
-  //   {
-  //     probabilityBoard[temp][x] = probabilityBoard[temp][x] * .83;  ;
-  //   }
-  //   temp = y-1; 
-  //   if(inRange(temp,x) )
-  //   {
-  //     probabilityBoard[temp][x] = probabilityBoard[temp][x] * .83;  ;
-  //   }
-  //   //horizontal 
-  //   temp = x+1;
-  //   if(inRange(y,temp) && !discarted(y,temp))
-  //   {
-  //     probabilityBoard[y][temp] = probabilityBoard[y][temp] * .83;  ;
-  //   }
-  //   temp = x-1;
-  //   if(inRange(y,temp) && !discarted(y,temp))
-  //   {
-  //     probabilityBoard[y][temp] = probabilityBoard[y][temp] * .83;  ;
-  //   }
-  // }
-
-    function updateHV(y,x){
+  function updateHV(y,x){
     //Vertical 
     let temp = y+1; 
     if(inRange(temp,x) && !discarted(temp,x))
     {
-      probabilityBoard[temp][x] = .95;  ;
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * .83;
     }
     temp = y-1; 
     if(inRange(temp,x) )
     {
-      probabilityBoard[temp][x] = .95;  ;
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * .83;  
     }
     //horizontal 
     temp = x+1;
     if(inRange(y,temp) && !discarted(y,temp))
     {
-      probabilityBoard[y][temp] = .95 ;
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * .83; 
     }
     temp = x-1;
     if(inRange(y,temp) && !discarted(y,temp))
     {
-      probabilityBoard[y][temp] = .95;  ;
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * .83;
     }
   }
+
+  //   function updateHV(y,x){
+  //   //Vertical 
+  //   let temp = y+1; 
+  //   if(inRange(temp,x) && !discarted(temp,x))
+  //   {
+  //     probabilityBoard[temp][x] = .95;  ;
+  //   }
+  //   temp = y-1; 
+  //   if(inRange(temp,x) )
+  //   {
+  //     probabilityBoard[temp][x] = .95;  ;
+  //   }
+  //   //horizontal 
+  //   temp = x+1;
+  //   if(inRange(y,temp) && !discarted(y,temp))
+  //   {
+  //     probabilityBoard[y][temp] = .95 ;
+  //   }
+  //   temp = x-1;
+  //   if(inRange(y,temp) && !discarted(y,temp))
+  //   {
+  //     probabilityBoard[y][temp] = .95;  ;
+  //   }
+  // }
 
   /**
    * Determines the new state for a cell based on its existing state
