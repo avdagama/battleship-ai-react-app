@@ -283,12 +283,21 @@ function App() {
         //update horizontal and vertical as long as is on bounds 
         updateHV(y,x); 
 
+        let edge = lineDetector(y,x); 
+        //edgue decteo can return both side. 
+        //if edge increate the problabiity of both edgues by a bunch 
+        if(edge)
+        {
+          //probabilityBoard[y][x] = 
+        }
+
         break;
 
       default:
         break;
     }
   }
+  
 
   const maxArrayIndex = 10; 
   const minArrayIndex = 0; 
@@ -303,13 +312,13 @@ function App() {
   function discarted(y,x){
     //return (probabilityBoard[y][x] == 0) ? true : false;
 
-    if( probabilityBoard[y][x] == 0 ){
+    if( probabilityBoard[y][x] === 0 ){
       return true; 
     }
-    else if( probabilityBoard[y-1][x] == 0 &&
-           probabilityBoard[y+1][x] == 0 &&
-           probabilityBoard[y][x+1] == 0 &&
-           probabilityBoard[y][x-1] == 0  ) 
+    else if( probabilityBoard[y-1][x] === 0 &&
+           probabilityBoard[y+1][x] === 0 &&
+           probabilityBoard[y][x+1] === 0 &&
+           probabilityBoard[y][x-1] === 0  ) 
     {
       return true; 
     }
@@ -326,7 +335,7 @@ function App() {
       probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;
     }
     temp = y-1; 
-    if(inRange(temp,x) )
+    if(inRange(temp,x)  && !discarted(temp,x) )
     {
       probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;  
     }
@@ -343,30 +352,10 @@ function App() {
     }
   }
 
-  //   function updateHV(y,x){
-  //   //Vertical 
-  //   let temp = y+1; 
-  //   if(inRange(temp,x) && !discarted(temp,x))
-  //   {
-  //     probabilityBoard[temp][x] = .95;  ;
-  //   }
-  //   temp = y-1; 
-  //   if(inRange(temp,x) )
-  //   {
-  //     probabilityBoard[temp][x] = .95;  ;
-  //   }
-  //   //horizontal 
-  //   temp = x+1;
-  //   if(inRange(y,temp) && !discarted(y,temp))
-  //   {
-  //     probabilityBoard[y][temp] = .95 ;
-  //   }
-  //   temp = x-1;
-  //   if(inRange(y,temp) && !discarted(y,temp))
-  //   {
-  //     probabilityBoard[y][temp] = .95;  ;
-  //   }
-  // }
+  function lineDetector(y,x){
+    //check if up down left right was a hit. bef 
+    return null; 
+  }
 
   /**
    * Determines the new state for a cell based on its existing state
