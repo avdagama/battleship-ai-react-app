@@ -279,10 +279,53 @@ function App() {
       //hit
       case 'H':
         // TODO: update the probability board after a hit
+
+        //update horizontal and vertical as long as is on bounds 
+
+
         break;
 
       default:
         break;
+    }
+  }
+
+  const maxArrayIndex = 10; 
+  const minArrayIndex = 0; 
+  function inRange(y , x){
+      if( minArrayIndex <= x <= maxArrayIndex){
+        if( minArrayIndex <= y <= maxArrayIndex){
+            return true; 
+        }
+      }
+  }
+
+  function discarted(y,x){
+    return (probabilityBoard[y][x] == 0) ? true : false;
+  }
+  
+  function updateHV(y,x){
+    //Vertical 
+    let temp = y+1; 
+    if(inRange(temp,x) && !discarted(temp,x))
+    {
+      probabilityBoard[temp][x] = probabilityBoard[temp][x] * .83;  ;
+    }
+    temp = y-1; 
+    if(inRange(temp,x) )
+    {
+      probabilityBoard[temp][x] = probabilityBoard[temp][x] * .83;  ;
+    }
+    //horizontal 
+    temp = x+1;
+    if(inRange(y,temp) && !discarted(y,temp))
+    {
+      probabilityBoard[y][temp] = probabilityBoard[y][temp] * .83;  ;
+    }
+    temp = x-1;
+    if(inRange(y,temp) && !discarted(y,temp))
+    {
+      probabilityBoard[y][temp] = probabilityBoard[y][temp] * .83;  ;
     }
   }
 
