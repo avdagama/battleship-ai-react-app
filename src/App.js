@@ -311,16 +311,15 @@ function App() {
 
   function discarted(y,x){
     //return (probabilityBoard[y][x] == 0) ? true : false
-    if( probabilityBoard[y][x] == 0 )
+    if( probabilityBoard[y][x] === 0 )
     {
       return true; 
     }
 
-
-    if(   (inRange(y-1,x) && probabilityBoard[y-1][x] === 0) &&
-          (inRange(y+1,x) && probabilityBoard[y+1][x] === 0) &&
-          (inRange(y,x+1) && probabilityBoard[y][x+1] === 0) &&
-          (inRange(y,x-1) &&probabilityBoard[y][x-1] === 0)      ) 
+    if(   (inRange(y-1,x) && probabilityBoard[y-1][x] === 0.0) &&
+          (inRange(y+1,x) && probabilityBoard[y+1][x] === 0.0) &&
+          (inRange(y,x+1) && probabilityBoard[y][x+1] === 0.0) &&
+          (inRange(y,x-1) &&probabilityBoard[y][x-1] === 0.0)      ) 
     {
       return true; 
     }
@@ -356,6 +355,10 @@ function App() {
 
   function lineDetector(y,x){
     //check if up down left right was a hit. bef 
+    if(  (inRange(y+1,x) &&  probabilityBoard[y+1][x] === 0) || (inRange(y-1,x) &&  probabilityBoard[y-1][x] === 0) )
+      return 'H'; //horizontal line 
+    else if(  (inRange(y,x+1) &&  probabilityBoard[y][x+1] === 0) || (inRange(y,x-1) &&  probabilityBoard[y][x-1] === 0) )
+      return "V"; 
     return null; 
   }
 
