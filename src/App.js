@@ -19,6 +19,21 @@ function App() {
     [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
     [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
   ]
+
+  //checker board pdf 
+  // const startingProbabilityBoard = [
+  //   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+  //   [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.9, 0.9, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.9, 0.9, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
+  //   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+  // ]
+
   
   const [userBoard, setUserBoard] = useState(startingUserBoard);
   const [computerBoard, setComputerBoard] = useState(startingComputerBoard);
@@ -331,7 +346,7 @@ function App() {
   
   function updateHV(y,x){
     //Vertical 
-    const percentage = .60; 
+    const percentage = .80 ; 
     let temp = y+1; 
     if(inRange(temp,x) && !discarted(temp,x))
     {
@@ -358,18 +373,18 @@ function App() {
   function lineDetector(y,x){
     //check if up down left right was a hit. bef 
     if(  (inRange(y+1,x) &&  probabilityBoard[y+1][x] === 0) || (inRange(y-1,x) &&  probabilityBoard[y-1][x] === 0) )
-      return 'H'; //horizontal line 
-    else if(  (inRange(y,x+1) &&  probabilityBoard[y][x+1] === 0) || (inRange(y,x-1) &&  probabilityBoard[y][x-1] === 0) )
-      return 'V'; 
+      return 'V'; //horizontal line 
+    else if(  ( (inRange(y,x+1) &&  probabilityBoard[y][x+1] === 0) )  || (inRange(y,x-1) &&  probabilityBoard[y][x-1] === 0) )
+      return 'H'; 
     return null; 
   }
 
   function updateEdge(y,x,orientation)
   {
     let percentage = 3.0; 
-
     if(orientation === 'H')
     {
+      console.log("Orientation updating ",{orientation})
       let right = x; 
       //update left and righ t
       while(inRange(y,right) && probabilityBoard[y][right] === 0.0)
