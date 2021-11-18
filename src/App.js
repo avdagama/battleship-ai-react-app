@@ -19,6 +19,21 @@ function App() {
     [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
     [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
   ]
+
+  //checker board pdf 
+  // const startingProbabilityBoard = [
+  //   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5],
+  //   [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.9, 0.9, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.9, 0.9, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.8, 0.8, 0.8, 0.8, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.7, 0.7, 0.7, 0.7, 0.7, 0.7, 0.6, 0.5],
+  //   [0.5, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.6, 0.5],
+  //   [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+  // ]
+
   
   const [userBoard, setUserBoard] = useState(startingUserBoard);
   const [computerBoard, setComputerBoard] = useState(startingComputerBoard);
@@ -268,23 +283,155 @@ function App() {
    */
   function updateProbabilities(x, y, resultingCellState) {
     //since we don't want to make this move again, set the probability to 0
-    probabilityBoard[y][x] = 0.0;
+    // probabilityBoard[y][x] = 0.0;
 
     switch (resultingCellState) {
       //miss
       case 'M':
          // TODO: update the probability board after a miss
+         probabilityBoard[y][x] = -1.0;
         break;
 
       //hit
       case 'H':
         // TODO: update the probability board after a hit
+        probabilityBoard[y][x] = 0.0;
+
+        //update horizontal and vertical as long as is on bounds 
+        updateHV(y,x); 
+
+        let oritentation = lineDetector(y,x); 
+        //edgue decteo can return both side. 
+        //if edge increate the problabiity of both edgues by a bunch 
+        if(oritentation)
+        {
+          updateEdge(y,x,oritentation); 
+        }
+
         break;
 
       default:
         break;
     }
   }
+  
+
+  const maxArrayIndex = 10; 
+  const minArrayIndex = 0; 
+  function inRange(y , x){
+      if( minArrayIndex <= x && x < maxArrayIndex){
+        if( minArrayIndex <= y && y < maxArrayIndex){
+            return true; 
+        }
+      }
+  }
+
+  function discarted(y,x){
+    //return (probabilityBoard[y][x] == 0) ? true : false
+    if( probabilityBoard[y][x] === 0 )
+    {
+      return true; 
+    }
+
+    if(   (inRange(y-1,x) && probabilityBoard[y-1][x] === 0.0) &&
+          (inRange(y+1,x) && probabilityBoard[y+1][x] === 0.0) &&
+          (inRange(y,x+1) && probabilityBoard[y][x+1] === 0.0) &&
+          (inRange(y,x-1) &&probabilityBoard[y][x-1] === 0.0)      ) 
+    {
+      return true; 
+    }
+    
+    return false; 
+  }
+  
+  function updateHV(y,x){
+    //Vertical 
+    const percentage = .80 ; 
+    let temp = y+1; 
+    if(inRange(temp,x) && !discarted(temp,x))
+    {
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;
+    }
+    temp = y-1; 
+    if(inRange(temp,x)  && !discarted(temp,x) )
+    {
+      probabilityBoard[temp][x] += probabilityBoard[temp][x] * percentage;  
+    }
+    //horizontal 
+    temp = x+1;
+    if(inRange(y,temp) && !discarted(y,temp))
+    {
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * percentage; 
+    }
+    temp = x-1;
+    if(inRange(y,temp) && !discarted(y,temp))
+    {
+      probabilityBoard[y][temp] += probabilityBoard[y][temp] * percentage;
+    }
+  }
+
+  function lineDetector(y,x){
+    //check if up down left right was a hit. bef 
+    if(  (inRange(y+1,x) &&  probabilityBoard[y+1][x] === 0) || (inRange(y-1,x) &&  probabilityBoard[y-1][x] === 0) )
+      return 'V'; //horizontal line 
+    else if(  ( (inRange(y,x+1) &&  probabilityBoard[y][x+1] === 0) )  || (inRange(y,x-1) &&  probabilityBoard[y][x-1] === 0) )
+      return 'H'; 
+    return null; 
+  }
+
+  function updateEdge(y,x,orientation)
+  {
+    let percentage = 3.0; 
+    if(orientation === 'H')
+    {
+      console.log("Orientation updating ",{orientation})
+      let right = x; 
+      //update left and righ t
+      while(inRange(y,right) && probabilityBoard[y][right] === 0.0)
+      {
+        right ++; 
+      }
+      //if in range updat epropb
+      if(inRange(y,right))
+        probabilityBoard[y][right] += probabilityBoard[y][right] * percentage
+      
+      //Left
+      let left = x; 
+      //update left and righ t
+      while(inRange(y,left) && probabilityBoard[y][left] === 0.0)
+      {
+        left --; 
+      }
+      //if in range update prob
+      if(inRange(y,left))
+        probabilityBoard[y][left] += probabilityBoard[y][left] * percentage
+    }
+    else if(orientation === 'V')
+    {
+      let up = y; 
+      //update left and righ t
+      while(inRange(up,x) && probabilityBoard[up][x] === 0.0)
+      {
+        up ++; 
+      }
+      //if in range updat epropb
+      if(inRange(up,x))
+        probabilityBoard[up][x] += probabilityBoard[up][x] * percentage; 
+
+      //Down 
+      let down = y; 
+      //update left and righ t
+      while(inRange(down,x) && probabilityBoard[down][x] === 0.0)
+      {
+        down --; 
+      }
+      //if in range update prob
+      if(inRange(down,x))
+        probabilityBoard[down][x] += probabilityBoard[down][x] * percentage
+    }
+  }
+
+
 
   /**
    * Determines the new state for a cell based on its existing state
