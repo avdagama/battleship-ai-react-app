@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/battleship-ai-react-app/static/css/main.6df49153.chunk.css",
-    "main.js": "/battleship-ai-react-app/static/js/main.80ad6cb2.chunk.js",
-    "main.js.map": "/battleship-ai-react-app/static/js/main.80ad6cb2.chunk.js.map",
+    "main.js": "/battleship-ai-react-app/static/js/main.af413d66.chunk.js",
+    "main.js.map": "/battleship-ai-react-app/static/js/main.af413d66.chunk.js.map",
     "runtime-main.js": "/battleship-ai-react-app/static/js/runtime-main.d7611a54.js",
     "runtime-main.js.map": "/battleship-ai-react-app/static/js/runtime-main.d7611a54.js.map",
     "static/js/2.b8192bcb.chunk.js": "/battleship-ai-react-app/static/js/2.b8192bcb.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.d7611a54.js",
     "static/js/2.b8192bcb.chunk.js",
     "static/css/main.6df49153.chunk.css",
-    "static/js/main.80ad6cb2.chunk.js"
+    "static/js/main.af413d66.chunk.js"
   ]
 }
